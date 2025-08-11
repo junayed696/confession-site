@@ -8,29 +8,12 @@ import HeartReveal from "@/components/HeartReveal"
 import ConfessionIntro from "@/components/ConfessionIntro"
 import SpecialMessage from "@/components/SpecialMessage"
 import PhotoGallery from "@/components/PhotoGallery"
-import VoiceNote from "@/components/VoiceNote"
-import FloatingElements from "@/components/FloatingElements"
-import BackgroundMusic from "@/components/BackgroundMusic"
 
 export default function ConfessionSite() {
   const [currentScreen, setCurrentScreen] = useState("loader")
-  const [musicStarted, setMusicStarted] = useState(false)
-
-  const musicRef = useRef(null)
 
   const handleScreenChange = (screen) => {
     setCurrentScreen(screen)
-    if (screen === "heartReveal" && !musicStarted) {
-      setMusicStarted(true)
-    }
-  }
-
-  const handleVoicePlay = () => {
-    musicRef.current?.pause()
-  }
-
-  const handleVoicePause = () => {
-    musicRef.current?.resume()
   }
 
   return (
@@ -49,11 +32,6 @@ export default function ConfessionSite() {
       }} />
 
 
-      {/* Cute floating elements */}
-      <FloatingElements />
-
-      {musicStarted && <BackgroundMusic ref={musicRef} />}
-
       <AnimatePresence mode="wait">
         {currentScreen === "loader" && <Loader key="loader" onComplete={() => handleScreenChange("secretCode")} />}
         {currentScreen === "secretCode" && (
@@ -66,9 +44,8 @@ export default function ConfessionSite() {
           <ConfessionIntro key="confessionIntro" onComplete={() => handleScreenChange("message")} />
         )}
         {currentScreen === "message" && (
-          <SpecialMessage key="message" onComplete={() => handleScreenChange("voiceNote")} />
+          <SpecialMessage key="message" onComplete={() => handleScreenChange("photos")} />
         )}
-        {currentScreen === "voiceNote" && <VoiceNote key="voiceNote" onComplete={() => handleScreenChange("photos")} onPlay={handleVoicePlay} onPause={handleVoicePause} />}
         {currentScreen === "photos" && <PhotoGallery key="photos" />}
       </AnimatePresence>
 
